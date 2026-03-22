@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,13 +81,25 @@
         }
 
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 30px) scale(1.1); }
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            100% {
+                transform: translate(30px, 30px) scale(1.1);
+            }
         }
 
         h1 {
@@ -105,6 +118,7 @@
             color: var(--text-muted);
             margin-bottom: 2rem;
             font-size: 0.95rem;
+            line-height: 1.5;
         }
 
         .input-group {
@@ -203,73 +217,59 @@
             display: flex;
             gap: 1rem;
         }
-        
+
         .row .input-group {
             flex: 1;
         }
 
-        /* Toggle Switch */
-        .toggle-container {
+        /* dual price layout */
+        .result-group {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: rgba(0,0,0,0.2);
-            border-radius: 12px;
-            border: 1px solid var(--glass-border);
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
         }
 
-        .toggle-label {
+        .price-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .price-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .price-value {
+            font-weight: 800;
+            color: #fff;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            gap: 0.2rem;
+        }
+
+        .price-value.standard {
+            font-size: 2.2rem;
+            opacity: 0.8;
+        }
+
+        .price-value.uberone {
+            font-size: 3.2rem;
+            color: #FFD700;
+            /* Gold for Uber One */
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .price-value span {
+            font-size: 1rem;
             font-weight: 600;
-        }
-
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 28px;
-        }
-
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.1);
-            transition: .4s;
-            border-radius: 34px;
-        }
-
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 20px;
-            width: 20px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-
-        input:checked + .slider {
-            background-color: var(--secondary);
-        }
-
-        input:checked + .slider:before {
-            transform: translateX(22px);
+            color: var(--text-muted);
+            margin-top: 0.5rem;
         }
 
         .result-card {
@@ -291,7 +291,10 @@
         .result-card::before {
             content: '';
             position: absolute;
-            top: 0; left: 0; right: 0; height: 3px;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
             background: linear-gradient(90deg, transparent, var(--secondary), transparent);
         }
 
@@ -303,21 +306,8 @@
             letter-spacing: 1px;
         }
 
-        .result-value {
-            font-size: 3.5rem;
-            font-weight: 800;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.25rem;
-        }
-
-        .result-value span {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            margin-top: 1rem;
+        .price-value.uberone span {
+            color: rgba(255, 215, 0, 0.6);
         }
 
         .driver-earnings {
@@ -381,8 +371,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .btn-reset {
@@ -411,9 +408,11 @@
             .container {
                 padding: 1.5rem;
             }
+
             .result-value {
                 font-size: 3rem;
             }
+
             .row {
                 flex-direction: column;
                 gap: 0;
@@ -421,6 +420,7 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="bg-blob blob-1"></div>
@@ -428,7 +428,8 @@
 
     <div class="container">
         <h1>Uber 車資計算</h1>
-        <p class="subtitle">台灣地區・即時費率試算</p>
+        <p class="subtitle">台灣地區・官方費率試算<br><small style="font-size: 0.8rem; opacity: 0.7;">(註：北北基尖峰時段每分鐘為 $3.7)</small>
+        </p>
 
         <div class="input-group" style="margin-bottom: 1.5rem;">
             <label for="region">選擇地區</label>
@@ -436,10 +437,8 @@
                 <span class="input-icon">🌍</span>
                 <select id="region">
                     <option value="taipei">北北基 (基本48, 每公里25, 每分鐘3.4)</option>
-                    <option value="taoyuan">桃竹苗 (基本45, 每公里25, 每分鐘3.2)</option>
-                    <option value="taichung">中彰投 (基本42, 每公里23, 每分鐘3.0)</option>
-                    <option value="south">南高屏 (基本40, 每公里22, 每分鐘2.8)</option>
-                    <option value="yilan">宜蘭 (基本50, 每公里25, 每分鐘3.5)</option>
+                    <option value="taoyuan">桃園 (基本59, 每公里25, 每分鐘1.7)</option>
+                    <option value="yilan">宜蘭 (基本92, 每公里20, 每分鐘1.2)</option>
                 </select>
                 <span style="position: absolute; right: 1rem; color: var(--text-muted); pointer-events: none;">▼</span>
             </div>
@@ -473,19 +472,10 @@
             </div>
         </div>
 
-        <div class="toggle-container">
-            <div class="toggle-label">
-                <span>👑</span> Uber One 會員 (享95折)
-            </div>
-            <label class="switch">
-                <input type="checkbox" id="uberOne">
-                <span class="slider"></span>
-            </label>
-        </div>
-
         <div class="settings-toggle" id="settingsToggle">
             進階費率設定
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
                 <polyline points="6 9 12 15 18 9"></polyline>
             </svg>
         </div>
@@ -535,11 +525,21 @@
         </div>
 
         <div class="result-card">
-            <div class="result-label">預估總車資</div>
-            <div class="result-value">
-                <span>NT$</span> <span style="color:white; font-size: 1em; margin:0;" id="totalFare">0</span>
+            <div class="result-group">
+                <div class="price-item">
+                    <div class="price-label">一般預估車資</div>
+                    <div class="price-value standard">
+                        <span>NT$</span> <span id="totalFare">0</span>
+                    </div>
+                </div>
+                <div class="price-item">
+                    <div class="price-label">👑 Uber One 會員價 (95折)</div>
+                    <div class="price-value uberone">
+                        <span>NT$</span> <span id="uberOneFare">0</span>
+                    </div>
+                </div>
             </div>
-            
+
             <div class="driver-earnings">
                 司機實拿 (扣除25%): NT$ <span id="driverFare">0</span>
             </div>
@@ -558,16 +558,14 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = [
-                'distance', 'time', 'uberOne', 
+                'distance', 'time',
                 'baseFare', 'perKm', 'perMin', 'surge', 'minFare'
             ];
 
             const regionRates = {
                 'taipei': { baseFare: 48, perKm: 25, perMin: 3.4, minFare: 85 },
-                'taoyuan': { baseFare: 45, perKm: 25, perMin: 3.2, minFare: 85 },
-                'taichung': { baseFare: 42, perKm: 23, perMin: 3.0, minFare: 85 },
-                'south': { baseFare: 40, perKm: 22, perMin: 2.8, minFare: 85 },
-                'yilan': { baseFare: 50, perKm: 25, perMin: 3.5, minFare: 120 }
+                'taoyuan': { baseFare: 59, perKm: 25, perMin: 1.7, minFare: 90 },
+                'yilan': { baseFare: 92, perKm: 20, perMin: 1.2, minFare: 120 }
             };
 
             const elements = {};
@@ -594,7 +592,7 @@
                     const targetId = e.target.getAttribute('data-target');
                     const addVal = parseFloat(e.target.getAttribute('data-val'));
                     const currentVal = parseFloat(elements[targetId].value) || 0;
-                    
+
                     if (targetId === 'time') {
                         elements[targetId].value = Math.floor(currentVal + addVal);
                     } else {
@@ -606,9 +604,6 @@
 
             // Initialize default region values
             regionSelect.dispatchEvent(new Event('change'));
-
-            // Handle Uber One Checkbox change explicitly
-            elements['uberOne'].addEventListener('change', calculateFare);
 
             // Toggle Advanced Settings
             const settingsToggle = document.getElementById('settingsToggle');
@@ -623,9 +618,8 @@
             document.getElementById('resetBtn').addEventListener('click', () => {
                 elements.distance.value = '';
                 elements.time.value = '';
-                elements.uberOne.checked = false;
                 elements.surge.value = '1.0';
-                
+
                 // Re-trigger region set to ensure base fares are defaulted correctly
                 regionSelect.dispatchEvent(new Event('change'));
             });
@@ -638,7 +632,6 @@
                 const perMin = parseFloat(elements.perMin.value) || 0;
                 const surge = parseFloat(elements.surge.value) || 1;
                 const minFare = parseFloat(elements.minFare.value) || 0;
-                const isUberOne = elements.uberOne.checked;
 
                 const distanceFare = distance * perKm;
                 const timeFare = time * perMin;
@@ -651,21 +644,19 @@
 
                 // Default state when inputs are empty
                 if (distance === 0 && time === 0) {
-                   total = 0; 
-                } else {
-                    // Apply Uber One Discount (95折 = 5% off)
-                    if (isUberOne) {
-                        total = total * 0.95;
-                    }
+                    total = 0;
                 }
 
-                // Round to nearest integer (traditional in Taiwan)
+                const totalUberOne = Math.round(total * 0.95);
                 total = Math.round(total);
 
                 // Update UI with animation
                 let currentVal = parseInt(document.getElementById('totalFare').innerText.replace(/,/g, '')) || 0;
                 animateValue('totalFare', currentVal, total, 300);
-                
+
+                let currentUberOneVal = parseInt(document.getElementById('uberOneFare').innerText.replace(/,/g, '')) || 0;
+                animateValue('uberOneFare', currentUberOneVal, totalUberOne, 300);
+
                 let currentDriverVal = parseInt(document.getElementById('driverFare').innerText.replace(/,/g, '')) || 0;
                 let driverTotal = Math.round(total * 0.75);
                 animateValue('driverFare', currentDriverVal, driverTotal, 300);
@@ -694,4 +685,5 @@
         });
     </script>
 </body>
+
 </html>
