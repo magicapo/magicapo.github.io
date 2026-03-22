@@ -497,6 +497,19 @@
             </div>
         </div>
 
+        <div class="input-group">
+            <label for="extraFee">額外加成 (元)</label>
+            <div class="input-wrapper">
+                <span class="input-icon">➕</span>
+                <input type="number" id="extraFee" placeholder="例如: 100" step="1" min="0" inputmode="numeric">
+            </div>
+            <div class="quick-btns">
+                <button type="button" class="btn-increment" data-target="extraFee" data-val="10">+10</button>
+                <button type="button" class="btn-increment" data-target="extraFee" data-val="50">+50</button>
+                <button type="button" class="btn-increment" data-target="extraFee" data-val="100">+100</button>
+            </div>
+        </div>
+
         <div class="settings-toggle" id="settingsToggle">
             進階費率設定
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -583,7 +596,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const inputs = [
-                'distance', 'time',
+                'distance', 'time', 'extraFee',
                 'baseFare', 'perKm', 'perMin', 'surge', 'minFare'
             ];
 
@@ -643,6 +656,7 @@
             document.getElementById('resetBtn').addEventListener('click', () => {
                 elements.distance.value = '';
                 elements.time.value = '';
+                elements.extraFee.value = '';
                 elements.surge.value = '1.0';
 
                 // Re-trigger region set to ensure base fares are defaulted correctly
@@ -657,12 +671,13 @@
                 const perMin = parseFloat(elements.perMin.value) || 0;
                 const surge = parseFloat(elements.surge.value) || 1;
                 const minFare = parseFloat(elements.minFare.value) || 0;
+                const extraFee = parseFloat(elements.extraFee.value) || 0;
 
                 const distanceFare = distance * perKm;
                 const timeFare = time * perMin;
 
                 let subTotal = baseFare + distanceFare + timeFare;
-                subTotal = subTotal * surge;
+                subTotal = (subTotal * surge) + extraFee;
 
                 // Apply min fare logic
                 let total = Math.max(subTotal, minFare);
