@@ -361,6 +361,13 @@
             color: var(--text-muted);
         }
 
+        .visitor-stats {
+            margin-top: 0.6rem;
+            font-size: 0.65rem;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 0.3px;
+        }
+
         /* Settings Accordion */
         .settings-toggle {
             display: block;
@@ -614,6 +621,10 @@
                 <span id="detailDistance">里程費: $0</span>
                 <span id="detailTime">時間費: $0</span>
             </div>
+
+            <div class="visitor-stats">
+                <span>📈 累計造訪次數：<span id="visitCount">...</span> </span>
+            </div>
         </div>
 
         <div class="settings-toggle" id="settingsToggle" style="margin-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 1rem;">
@@ -855,6 +866,14 @@
                         : calcTypeTotal(typeRates, distance, time, surge, extraFee, isEmpty);
                 });
                 updateDriverFare();
+
+                // Increment query counter only once per visit session
+                if (!window.hasQueried && !isEmpty && (distance > 0 || time > 0)) {
+                    window.hasQueried = true;
+                    if (typeof window.incrementQueryCounter === 'function') {
+                        window.incrementQueryCounter();
+                    }
+                }
             }
 
             // Track selected vehicle type
@@ -909,6 +928,43 @@
                 window.requestAnimationFrame(step);
             }
         });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js';
+        import { getDatabase, ref, runTransaction, onValue } from 'https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDML4NS0IxZ5bPcRkKSGSDbLyCzS0lrOqY",
+            authDomain: "ubere-ed558.firebaseapp.com",
+            databaseURL: "https://ubere-ed558-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "ubere-ed558",
+            storageBucket: "ubere-ed558.firebasestorage.app",
+            messagingSenderId: "537045322621",
+            appId: "1:537045322621:web:9296ab8841aa91157cda14"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const visitorRef = ref(db, 'visitCount');
+        const queryRef = ref(db, 'queryCount');
+
+        // Simple Atomic Increment on page load
+        runTransaction(visitorRef, (currentCount) => {
+            return (currentCount || 0) + 1;
+        });
+
+        // UI Real-time Listeners
+        onValue(visitorRef, (snap) => {
+            const el = document.getElementById('visitCount');
+            if (el) el.innerText = (snap.val() || 0).toLocaleString();
+        });
+
+        // Expose increment function
+        window.incrementQueryCounter = () => {
+            runTransaction(queryRef, (current) => (current || 0) + 1);
+        };
+        window.hasQueried = false;
     </script>
 </body>
 
