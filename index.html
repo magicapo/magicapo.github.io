@@ -233,58 +233,60 @@
             flex: 1;
         }
 
-        /* dual price layout */
-        .result-group {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-around;
-            align-items: flex-end;
-            gap: 1rem;
+        /* Vehicle type grid */
+        .fare-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 0.5rem;
             margin-bottom: 0.75rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             padding-bottom: 0.75rem;
         }
 
-        .price-item {
+        .fare-col {
             display: flex;
             flex-direction: column;
             align-items: center;
+            gap: 0.3rem;
+            padding: 0.6rem 0.25rem;
+            border-radius: 12px;
+            background: rgba(255,255,255,0.03);
+            transition: background 0.2s;
         }
 
-        .price-label {
-            font-size: 0.85rem;
+        .fare-col:hover {
+            background: rgba(255,255,255,0.07);
+        }
+
+        .fare-type-icon {
+            font-size: 1.3rem;
+            line-height: 1;
+        }
+
+        .fare-type-label {
+            font-size: 0.7rem;
+            font-weight: 700;
             color: var(--text-muted);
-            margin-bottom: 0.25rem;
-            text-transform: uppercase;
             letter-spacing: 0.5px;
+            text-align: center;
         }
 
-        .price-value {
+        .fare-amount {
+            font-size: 1.35rem;
             font-weight: 800;
             color: #fff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.2rem;
+            line-height: 1;
         }
 
-        .price-value.standard {
-            font-size: 1.4rem;
-            opacity: 0.9;
-        }
-
-        .price-value.uberone {
-            font-size: 2.2rem;
-            color: #FFD700;
-            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
-        }
-
-        .price-value span {
-            font-size: 1rem;
+        .fare-currency {
+            font-size: 0.65rem;
             font-weight: 600;
             color: var(--text-muted);
-            margin-top: 0.5rem;
         }
+
+        /* highlight the main (UberX) column */
+        .fare-col.main-type .fare-type-label { color: var(--secondary); }
+        .fare-col.main-type .fare-amount { font-size: 1.6rem; color: #60a5fa; }
 
         .result-card {
             background: linear-gradient(135deg, rgba(39, 110, 241, 0.15), rgba(39, 110, 241, 0.05));
@@ -326,9 +328,6 @@
             letter-spacing: 1px;
         }
 
-        .price-value.uberone span {
-            color: rgba(255, 215, 0, 0.6);
-        }
 
         .driver-earnings {
             margin-top: 0.5rem;
@@ -434,24 +433,28 @@
                 margin: 0.5rem 0;
             }
 
-            .price-item {
-                flex: 1;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding-bottom: 0;
-                border-bottom: none;
+            .fare-grid {
+                grid-template-columns: repeat(5, 1fr);
+                gap: 0.3rem;
             }
 
-            .price-label {
-                font-size: 0.7rem;
+            .fare-col {
+                padding: 0.5rem 0.1rem;
             }
 
-            .price-value.uberone {
-                font-size: 1.8rem;
+            .fare-type-icon {
+                font-size: 1.1rem;
             }
 
-            .price-value.standard {
+            .fare-type-label {
+                font-size: 0.6rem;
+            }
+
+            .fare-amount {
+                font-size: 1.1rem;
+            }
+
+            .fare-col.main-type .fare-amount {
                 font-size: 1.3rem;
             }
 
@@ -558,18 +561,36 @@
         </button>
 
         <div class="result-card">
-            <div class="result-group">
-                <div class="price-item">
-                    <div class="price-label">一般預估車資</div>
-                    <div class="price-value standard">
-                        <span>NT$</span> <span id="totalFare">0</span>
-                    </div>
+            <div class="fare-grid">
+                <div class="fare-col main-type" title="經濟">
+                    <div class="fare-type-icon">🚗</div>
+                    <div class="fare-type-label">經濟</div>
+                    <div class="fare-currency">NT$</div>
+                    <div class="fare-amount" id="totalFare">0</div>
                 </div>
-                <div class="price-item">
-                    <div class="price-label">👑 Uber One 會員價 (95折)</div>
-                    <div class="price-value uberone">
-                        <span>NT$</span> <span id="uberOneFare">0</span>
-                    </div>
+                <div class="fare-col" title="尊榮">
+                    <div class="fare-type-icon">🖤</div>
+                    <div class="fare-type-label">尊榮</div>
+                    <div class="fare-currency">NT$</div>
+                    <div class="fare-amount" id="fareBlack">-</div>
+                </div>
+                <div class="fare-col" title="六人座">
+                    <div class="fare-type-icon">🚐</div>
+                    <div class="fare-type-label">六人座</div>
+                    <div class="fare-currency">NT$</div>
+                    <div class="fare-amount" id="fareXL">0</div>
+                </div>
+                <div class="fare-col" title="舒適">
+                    <div class="fare-type-icon">⭐</div>
+                    <div class="fare-type-label">舒適</div>
+                    <div class="fare-currency">NT$</div>
+                    <div class="fare-amount" id="fareComfort">0</div>
+                </div>
+                <div class="fare-col" title="純電舒適">
+                    <div class="fare-type-icon">⚡</div>
+                    <div class="fare-type-label">純電舒適</div>
+                    <div class="fare-currency">NT$</div>
+                    <div class="fare-amount" id="fareEV">0</div>
                 </div>
             </div>
 
@@ -644,17 +665,61 @@
             ];
 
             const regionRates = {
-                'taipei': { baseFare: 48, perKm: 25, perMin: 3.4, minFare: 85 },
-                'taoyuan': { baseFare: 59, perKm: 25, perMin: 1.7, minFare: 90 },
-                'hsinchu': { baseFare: 75, perKm: 25, perMin: 2.0, minFare: 100 },
-                'miaoli': { baseFare: 65, perKm: 25, perMin: 2.5, minFare: 100 },
-                'yilan': { baseFare: 92, perKm: 20, perMin: 1.2, minFare: 120 },
-                'taichung': { baseFare: 56, perKm: 25, perMin: 2.7, minFare: 85 },
-                'changhua': { baseFare: 57, perKm: 24, perMin: 2.0, minFare: 85 },
-                'nantou': { baseFare: 58, perKm: 25, perMin: 1.0, minFare: 100 },
-                'tainan': { baseFare: 70, perKm: 25.5, perMin: 0.6, minFare: 85 },
-                'kaohsiung': { baseFare: 70, perKm: 25.6, perMin: 0.6, minFare: 85 },
-                'pingtung': { baseFare: 81, perKm: 25, perMin: 1.0, minFare: 100 }
+                'taipei':    { baseFare: 48,  perKm: 25,   perMin: 3.4, minFare: 85,
+                               black:   { baseFare: 72, perKm: 37.5, perMin: 5.1, minFare: 128 },
+                               xl:      { baseFare: 62, perKm: 32.5, perMin: 4.4, minFare: 111 },
+                               comfort: { baseFare: 58, perKm: 30,   perMin: 4.1, minFare: 102 },
+                               ev:      { baseFare: 67, perKm: 35,   perMin: 4.8, minFare: 119 } },
+                'taoyuan':   { baseFare: 59,  perKm: 25,   perMin: 1.7, minFare: 90,
+                               black:   { baseFare: 89, perKm: 37.5, perMin: 2.6, minFare: 135 },
+                               xl:      { baseFare: 77, perKm: 32.5, perMin: 2.2, minFare: 117 },
+                               comfort: { baseFare: 71, perKm: 30,   perMin: 2.0, minFare: 108 },
+                               ev:      { baseFare: 83, perKm: 35,   perMin: 2.4, minFare: 126 } },
+                'hsinchu':   { baseFare: 75,  perKm: 25,   perMin: 2.0, minFare: 100,
+                               black:   { baseFare: 113, perKm: 37.5, perMin: 3.0, minFare: 150 },
+                               xl:      { baseFare: 98,  perKm: 32.5, perMin: 2.6, minFare: 130 },
+                               comfort: { baseFare: 90,  perKm: 30,   perMin: 2.4, minFare: 120 },
+                               ev:      { baseFare: 105, perKm: 35,   perMin: 2.8, minFare: 140 } },
+                'miaoli':    { baseFare: 65,  perKm: 25,   perMin: 2.5, minFare: 100,
+                               black:   { baseFare: 97.5, perKm: 37.5, perMin: 3.8, minFare: 150 },
+                               xl:      { baseFare: 84.5, perKm: 32.5, perMin: 3.3, minFare: 130 },
+                               comfort: { baseFare: 78,   perKm: 30,   perMin: 3.1, minFare: 120 },
+                               ev:      { baseFare: 91,   perKm: 35,   perMin: 3.5, minFare: 140 } },
+                'yilan':     { baseFare: 92,  perKm: 20,   perMin: 1.2, minFare: 120,
+                               black:   { baseFare: 138, perKm: 30,   perMin: 1.8, minFare: 180 },
+                               xl:      { baseFare: 120, perKm: 26,   perMin: 1.6, minFare: 156 },
+                               comfort: { baseFare: 110, perKm: 24,   perMin: 1.4, minFare: 144 },
+                               ev:      { baseFare: 129, perKm: 28,   perMin: 1.7, minFare: 168 } },
+                'taichung':  { baseFare: 56,  perKm: 25,   perMin: 2.7, minFare: 85,
+                               black:   { baseFare: 87, perKm: 37.5, perMin: 4.1, minFare: 128 },
+                               xl:      { baseFare: 75, perKm: 32.5, perMin: 3.5, minFare: 111 },
+                               comfort: { baseFare: 70, perKm: 30,   perMin: 3.2, minFare: 102 },
+                               ev:      { baseFare: 81, perKm: 35,   perMin: 3.8, minFare: 119 } },
+                'changhua':  { baseFare: 57,  perKm: 24,   perMin: 2.0, minFare: 85,
+                               black:   { baseFare: 86, perKm: 36, perMin: 3.0, minFare: 128 },
+                               xl:      { baseFare: 74, perKm: 31, perMin: 2.6, minFare: 111 },
+                               comfort: { baseFare: 68, perKm: 29, perMin: 2.4, minFare: 102 },
+                               ev:      { baseFare: 80, perKm: 34, perMin: 2.8, minFare: 119 } },
+                'nantou':    { baseFare: 58,  perKm: 25,   perMin: 1.0, minFare: 100,
+                               black:   { baseFare: 87, perKm: 37.5, perMin: 1.5, minFare: 150 },
+                               xl:      { baseFare: 75, perKm: 32.5, perMin: 1.3, minFare: 130 },
+                               comfort: { baseFare: 70, perKm: 30,   perMin: 1.2, minFare: 120 },
+                               ev:      { baseFare: 81, perKm: 35,   perMin: 1.4, minFare: 140 } },
+                'tainan':    { baseFare: 70,  perKm: 25.5, perMin: 0.6, minFare: 85,
+                               black:   null,
+                               xl:      { baseFare: 91, perKm: 33.3, perMin: 0.8,  minFare: 111 },
+                               comfort: { baseFare: 84, perKm: 30.7, perMin: 0.7,  minFare: 102 },
+                               ev:      { baseFare: 98, perKm: 35.8, perMin: 0.84, minFare: 119 } },
+                'kaohsiung': { baseFare: 70,  perKm: 25.6, perMin: 0.6, minFare: 85,
+                               black:   null,
+                               xl:      { baseFare: 91, perKm: 33.3, perMin: 0.8,  minFare: 111 },
+                               comfort: { baseFare: 85, perKm: 30.7, perMin: 0.7,  minFare: 102 },
+                               ev:      { baseFare: 98, perKm: 35.9, perMin: 0.8,  minFare: 119 } },
+                'pingtung':  { baseFare: 81,  perKm: 25,   perMin: 1.0, minFare: 100,
+                               black:   { baseFare: 122, perKm: 37.5, perMin: 1.5, minFare: 150 },
+                               xl:      { baseFare: 106, perKm: 32.5, perMin: 1.3, minFare: 130 },
+                               comfort: { baseFare: 97,  perKm: 30,   perMin: 1.2, minFare: 120 },
+                               ev:      { baseFare: 113, perKm: 35,   perMin: 1.4, minFare: 140 } }
             };
 
             const elements = {};
@@ -714,6 +779,15 @@
                 regionSelect.dispatchEvent(new Event('change'));
             });
 
+            function calcTypeTotal(rates, distance, time, surge, extraFee, isEmpty) {
+                if (rates === null) return null;
+                if (isEmpty) return 0;
+                const distF = distance * rates.perKm;
+                const timeF = time * rates.perMin;
+                let sub = (rates.baseFare + distF + timeF) * surge + extraFee;
+                return Math.round(Math.max(sub, rates.minFare));
+            }
+
             function calculateFare() {
                 const distance = parseFloat(elements.distance.value) || 0;
                 const time = parseFloat(elements.time.value) || 0;
@@ -723,6 +797,7 @@
                 const surge = parseFloat(elements.surge.value) || 1;
                 const minFare = parseFloat(elements.minFare.value) || 0;
                 const extraFee = parseFloat(elements.extraFee.value) || 0;
+                const isEmpty = distance === 0 && time === 0;
 
                 const distanceFare = distance * perKm;
                 const timeFare = time * perMin;
@@ -730,30 +805,38 @@
                 let subTotal = baseFare + distanceFare + timeFare;
                 subTotal = (subTotal * surge) + extraFee;
 
-                // Apply min fare logic
-                let total = Math.max(subTotal, minFare);
+                let total = isEmpty ? 0 : Math.round(Math.max(subTotal, minFare));
 
-                // Default state when inputs are empty
-                if (distance === 0 && time === 0) {
-                    total = 0;
-                }
-
-                const totalUberOne = Math.round(total * 0.95);
-                total = Math.round(total);
-
-                // Update UI with animation
+                // Update main (UberX) fare
                 let currentVal = parseInt(document.getElementById('totalFare').innerText.replace(/,/g, '')) || 0;
                 animateValue('totalFare', currentVal, total, 300);
 
-                let currentUberOneVal = parseInt(document.getElementById('uberOneFare').innerText.replace(/,/g, '')) || 0;
-                animateValue('uberOneFare', currentUberOneVal, totalUberOne, 300);
-
                 let currentDriverVal = parseInt(document.getElementById('driverFare').innerText.replace(/,/g, '')) || 0;
-                let driverTotal = Math.round(total * 0.75);
-                animateValue('driverFare', currentDriverVal, driverTotal, 300);
+                animateValue('driverFare', currentDriverVal, Math.round(total * 0.75), 300);
 
                 document.getElementById('detailDistance').innerText = `里程費: $${Math.round(distanceFare)}`;
                 document.getElementById('detailTime').innerText = `時間費: $${Math.round(timeFare)}`;
+
+                // Update other vehicle type fares
+                const region = regionRates[document.getElementById('region').value];
+                const types = [
+                    { id: 'fareBlack',   key: 'black'   },
+                    { id: 'fareXL',      key: 'xl'      },
+                    { id: 'fareComfort', key: 'comfort' },
+                    { id: 'fareEV',      key: 'ev'      },
+                ];
+
+                types.forEach(({ id, key }) => {
+                    const el = document.getElementById(id);
+                    const typeRates = region[key];
+                    if (typeRates === null) {
+                        el.innerText = '–';
+                    } else {
+                        const prev = parseInt(el.innerText.replace(/[^\d]/g, '')) || 0;
+                        const val = calcTypeTotal(typeRates, distance, time, surge, extraFee, isEmpty);
+                        animateValue(id, prev, val, 300);
+                    }
+                });
             }
 
             // Number animation function
